@@ -8,7 +8,10 @@ function Weather() {
   const [lat ,setLat]=useState("");
   const [long ,setLong]=useState("");
   const [location, setLocation] = useState("");
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=b328d8ea7f4088f01ed237defe8a849f`;
+  const [tempUnit,setTempUnit]=useState("imperial");
+  const [tempCelious,setTempCelious]=useState("");
+  const [tempFran,setTempFran]=useState("");
+  
 
 function geoLocation(){
     if(navigator.geolocation){
@@ -21,13 +24,17 @@ function geoLocation(){
         })
     }
 }
-geoLocation();
 
-  const addApi = () => {
+
+  const AddApi=()=>{
+    
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=b328d8ea7f4088f01ed237defe8a849f&units=${tempUnit}`;
     if (location !== "") {
       try {
         axios.get(url).then((res) => {
           setData(res.data);
+          setTempCelious(Math.floor(res.data.main.temp));
+          setTempFran(Math.floor(res.data.main.temp *1.8+32));
           console.log(res.data);
         });
         setLocation("");
@@ -35,7 +42,25 @@ geoLocation();
         console.log(error);
       }
     }
-  };
+
+    
+    }
+
+    
+    
+    function toggleTempUnit(){
+      if(tempUnit==='imperial'){
+        setTempUnit("metric");
+      }else{
+        setTempUnit("imperial");
+      }
+
+  }
+
+  
+    geoLocation();
+  
+    
 
   
 
@@ -49,7 +74,7 @@ geoLocation();
           value={location}
           onChange={(e) => setLocation(e.target.value)}
         />
-        <BsSearch className="search-icon" onClick={addApi} />
+        <button onClick={AddApi} className="search-icon">Search</button>
       </div>
       {/* top box */}
       <div className="top">
@@ -58,7 +83,9 @@ geoLocation();
         </div>
         {/* temprature */}
         <div className="temp">
-          {data.main ? <h1>{data.main.temp}°F</h1> : null}
+          {
+            tempUnit==='imperial' && tempFran!==""?(<h1>{tempFran}°F{" "}<br/><button onClick={toggleTempUnit}className="toggle">Switch to Celsius</button></h1> ):(<h1>{tempCelious}°C{" "}<br/> <button onClick={toggleTempUnit} className="toggle">Switch to Fahrenheit</button></h1>)
+          }
         </div>
         {/* description */}
         <div className="description">

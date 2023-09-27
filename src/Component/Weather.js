@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { BsSearch } from "react-icons/bs";
+import error404 from '../assest/266599-P53ZNK-658.jpg';
+
 import axios from "axios";
 import "../index.css";
 
@@ -11,6 +12,7 @@ function Weather() {
   const [tempUnit,setTempUnit]=useState("imperial");
   const [tempCelious,setTempCelious]=useState("");
   const [tempFran,setTempFran]=useState("");
+  const [error,setError]=useState(false);
   
 
 function geoLocation(){
@@ -38,9 +40,12 @@ function geoLocation(){
           console.log(res.data);
         });
         setLocation("");
-      } catch (error) {
-        console.log(error);
+        setError(false)
+      } catch  {
+        setError(true);
       }
+    }else{
+      setError(true);
     }
 
     
@@ -76,39 +81,47 @@ function geoLocation(){
         />
         <button onClick={AddApi} className="search-icon">Search</button>
       </div>
-      {/* top box */}
-      <div className="top">
-        <div className="location">
-          <p>{data.name}</p>
-        </div>
-        {/* temprature */}
-        <div className="temp">
-          {
-            tempUnit==='imperial' && tempFran!==""?(<h1>{tempFran}°F{" "}<br/><button onClick={toggleTempUnit}className="toggle">Switch to Celsius</button></h1> ):(<h1>{tempCelious}°C{" "}<br/> <button onClick={toggleTempUnit} className="toggle">Switch to Fahrenheit</button></h1>)
-          }
-        </div>
-        {/* description */}
-        <div className="description">
-          {data.weather ?<p>{data.weather[0].description}</p>:null}
-        </div>
-      </div>
-      {/* footer */}
-      <div className="bottom">
-        <div className="feels">
-          {data.main ? <p className="bold">{data.main.feels_like}°F</p> : null}
-          <p>Feel Like</p>
-        </div>
-        {/* humidity */}
-        <div className="humidity">
-          {data.main ? <p className="bold">{data.main.humidity}%</p> : null}
-          <p>Humidity</p>
-        </div>
-        {/* wind */}
-        <div className="wind">
-          {data.wind?<p className="bold">{data.wind.speed} MPH</p>:null}
-          <p>Wind Speed</p>
-        </div>
-      </div>
+     
+     
+         {
+          error ?(<div className="error"><img src={error404} className="error-img"/></div>):(
+            
+            <div>
+            {/* top box */}
+
+          <div className="top">
+            <div className="location">
+              <p>{data.name}</p>
+            </div>
+            {/* temprature */}
+            <div className="temp">
+              {
+                tempUnit==='imperial' && tempFran!==""?(<h1>{tempFran}°F{" "}<br/><button onClick={toggleTempUnit}className="toggle">Switch to Celsius</button></h1> ):(<h1>{tempCelious}°C{" "}<br/> <button onClick={toggleTempUnit} className="toggle">Switch to Fahrenheit</button></h1>)
+              }
+            </div>
+            {/* description */}
+            <div className="description">
+              {data.weather ?<p>{data.weather[0].description}</p>:null}
+            </div>
+          </div>
+          {/* footer */}
+          <div className="bottom">
+            <div className="feels">
+              {data.main ? <p className="bold">{data.main.feels_like}°F</p> : null}
+              <p>Feel Like</p>
+            </div>
+            {/* humidity */}
+            <div className="humidity">
+              {data.main ? <p className="bold">{data.main.humidity}%</p> : null}
+              <p>Humidity</p>
+            </div>
+            {/* wind */}
+            <div className="wind">
+              {data.wind?<p className="bold">{data.wind.speed} MPH</p>:null}
+              <p>Wind Speed</p>
+            </div>
+          </div></div>)
+         }
     </div>
   );
 }

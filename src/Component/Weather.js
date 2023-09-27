@@ -5,8 +5,23 @@ import "../index.css";
 
 function Weather() {
   const [data, setData] = useState({});
+  const [lat ,setLat]=useState("");
+  const [long ,setLong]=useState("");
   const [location, setLocation] = useState("");
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=b328d8ea7f4088f01ed237defe8a849f`;
+
+function geoLocation(){
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition((position)=>{
+            console.log(position);
+            // console.log(position.coords.latitude);
+            // console.log(position.coords.longitude);
+            setLat("latitude"+position.coords.latitude);
+            setLong("longitude"+position.coords.longitude);
+        })
+    }
+}
+geoLocation();
 
   const addApi = () => {
     if (location !== "") {
@@ -21,6 +36,8 @@ function Weather() {
       }
     }
   };
+
+  
 
   return (
     <div className="container">
